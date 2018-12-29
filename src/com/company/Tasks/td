@@ -1,0 +1,13 @@
+/*Fabric f; = new Faric//TODO
+
+    public Application() {
+        f = new Fabric();
+    }
+
+    public void start(){
+        // autofac C#
+        TaskManager tdl = f.<TaskManager>get();// new TaskManagerConcrete(new TaskMySQLRepository());
+    }*/
+    #ef7e2c //основа
+    #F3A568 //тусклый
+    #A24E11 //темный

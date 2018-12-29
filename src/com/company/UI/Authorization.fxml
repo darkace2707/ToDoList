@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.Cursor?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.PasswordField?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane prefHeight="238.0" prefWidth="225.0" style="-fx-background-color: #FFFFFF;" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.company.UI.Controller">
+   <children>
+      <TextField fx:id="loginField" layoutX="25.0" layoutY="53.0" prefHeight="28.0" prefWidth="173.0" style="-fx-background-color: #F3A568; -fx-border-color: #A24E11; -fx-border-radius: 3;">
+         <font>
+            <Font name="Ubuntu" size="13.0" />
+         </font></TextField>
+      <Label layoutX="25.0" layoutY="28.0" text="Login">
+         <font>
+            <Font name="Comfortaa" size="19.0" />
+         </font>
+      </Label>
+      <Button fx:id="LogInButton" layoutX="80.0" layoutY="159.0" mnemonicParsing="false" style="-fx-background-color: #ef7e2c;" text="Log In">
+         <font>
+            <Font name="Cabin-Regular" size="14.0" />
+         </font>
+      </Button>
+      <Label layoutX="25.0" layoutY="91.0" text="Password">
+         <font>
+            <Font name="Comfortaa" size="19.0" />
+         </font>
+      </Label>
+      <PasswordField fx:id="passwordField" layoutX="25.0" layoutY="115.0" prefHeight="27.0" prefWidth="173.0" style="-fx-background-color: #F3A568; -fx-border-color: #A24E11; -fx-border-radius: 3;">
+         <font>
+            <Font name="Ubuntu" size="13.0" />
+         </font></PasswordField>
+      <Button fx:id="SignUpButton" layoutX="70.0" layoutY="196.0" mnemonicParsing="false" prefHeight="17.0" prefWidth="84.0" style="-fx-background-color: #FFFFFF;" text="Sign Up" textFill="#a24e11" underline="true">
+         <cursor>
+            <Cursor fx:constant="DEFAULT" />
+         </cursor>
+         <font>
+            <Font name="Comfortaa" size="13.0" />
+         </font>
+      </Button>
+   </children>
+</AnchorPane>
