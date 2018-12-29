@@ -7,4 +7,4 @@ public class Configs {
     public static final String dbPass = "root";
     public static final String dbName = "ToDoList";
 
-}
+}/**/
