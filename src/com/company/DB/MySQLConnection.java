@@ -10,13 +10,18 @@ public class MySQLConnection {
     private static Connection con = null;
 
     public static Connection getConnection() {
-        final String url = "jdbc:mysql://" + Configs.dbHost + ":" + Configs.dbPort + "/" + Configs.dbName;
+        //jdbc:mysql://localhost/db?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC
 
+        final String url = "jdbc:mysql://" + Configs.dbHost + ":" + Configs.dbPort + "/" + Configs.dbName+"?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC";
+        System.out.println(url);
         try {
+            //Class.forName("com.mysql.jdbc.Driver");
             con = DriverManager.getConnection(url, Configs.dbUser, Configs.dbPass);
         } catch (SQLException e) {
             e.printStackTrace();
-        }
+        }/* catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }*/
         return con;
     }
 
