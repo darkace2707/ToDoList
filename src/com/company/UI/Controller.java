@@ -50,6 +50,26 @@ public class Controller {
 
             if (id != -1) {
                 System.out.println("Success");
+                LogInButton.getScene().getWindow().hide();
+
+                FXMLLoader loader = new FXMLLoader();
+                loader.setLocation(getClass().getResource("MainWindow.fxml"));
+
+                try {
+                    loader.load();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+                MainWindowController mwc = loader.<MainWindowController>getController();
+                mwc.initData(id);
+
+
+                Parent root = loader.getRoot();
+                Stage stage = new Stage();
+                stage.setScene(new Scene(root));
+                stage.setResizable(false);
+                stage.showAndWait();
             } else {
                 System.out.println("Error");
             }

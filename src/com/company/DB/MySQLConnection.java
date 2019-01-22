@@ -26,13 +26,13 @@ public class MySQLConnection {
         try { con.close();  } catch(SQLException se) { se.printStackTrace(); }
     }*/
 
-    public static void updateRopository(String query) {
+    public static void updateRepository(String query) {
         try {
             con.createStatement().executeUpdate(query);
         } catch (SQLException e) {
             e.printStackTrace();
         } finally {
-            try { con.close();  } catch(SQLException se) { se.printStackTrace(); }
+            //try { con.close();  } catch(SQLException se) { se.printStackTrace(); }
         }
     }
 }
