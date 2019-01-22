@@ -31,6 +31,6 @@ public class UserMySQLRepository implements UserRepository {
 
     public void signUp(String login, String password) {
         String query = String.format("INSERT INTO Users (Login, Password) VALUES (\"%s\", \"%s\")", login, password);
-        MySQLConnection.updateRopository(query);
+        MySQLConnection.updateRepository(query);
     }
 }

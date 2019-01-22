@@ -1,7 +1,6 @@
 package com.company.DB;
 
 import com.company.UI.DateParser;
-import com.company.UI.Status;
 
 import java.sql.*;
 
@@ -49,7 +48,7 @@ public class TaskMySQLRepository implements TaskRepository {
                 "WHERE id = %4$d && UserID = %d5$\n", newTask.getName(), newTask.getDeadlineDate(), newTask.getStatus().toString(), task.getId(), userID);
 
         Connection con = MySQLConnection.getConnection();
-        MySQLConnection.updateRopository(query);
+        MySQLConnection.updateRepository(query);
     }
 
     public void remove(TaskDB task) {
@@ -58,7 +57,7 @@ public class TaskMySQLRepository implements TaskRepository {
                 "WHERE T.id = %d AND TU.UserID = %d;\n", task.getId(), userID);
 
         Connection con = MySQLConnection.getConnection();
-        MySQLConnection.updateRopository(query);
+        MySQLConnection.updateRepository(query);
     }
 
     public List<TaskDB> getTasks() {
