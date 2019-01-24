@@ -42,10 +42,28 @@ public class TaskMySQLRepository implements TaskRepository {
     }
 
     public void update(TaskDB task, TaskDB newTask) {
-        String query = String.format("UPDATE Task\n" +
+        /*String query = String.format("UPDATE Task\n" +
                 "INNER JOIN TaskUsers ON id = TaskID \n" +
                 "SET TaskName = \"%1$s\", DeadlineDate = \"%2$tF %2$tT\", Status = \"%3$s\"\n" +
-                "WHERE id = %4$d && UserID = %d5$\n", newTask.getName(), newTask.getDeadlineDate(), newTask.getStatus().toString(), task.getId(), userID);
+                "WHERE id = %4$d && UserID = %d5$\n", newTask.getName(), newTask.getDeadlineDate(), newTask.getStatus().toString(), task.getId(), userID);*/
+        //System.out.println(String.format("\"%1$tF %1$tT\"", newTask.getDeadlineDate()));
+
+        String status;
+        switch (newTask.getStatus()) {
+            case ENDED:
+                status = "ENDED";
+                break;
+            case PLANNED:
+                status = "PLANNED";
+                break;
+            case INPROGRESS:
+                status = "INPROGRESS";
+                break;
+
+                default:
+                    status = null;
+        }
+        String query = String.format("UPDATE Task SET TaskName = \"%1$s\", DeadlineDate = \"%2$tF %2$tT\", Status = \"%3$s\" WHERE id = %4$d && TaskMasterID = %5$d", newTask.getName(), newTask.getDeadlineDate(), status, task.getId(), userID);
 
         Connection con = MySQLConnection.getConnection();
         MySQLConnection.updateRepository(query);
@@ -120,4 +138,42 @@ public class TaskMySQLRepository implements TaskRepository {
             try { con.close(); } catch(SQLException se) { se.printStackTrace(); }
         }
     }
+
+    public String getInvolvedUsers(int taskID) {
+        String users = "";
+
+        String query = String.format("SELECT UserID FROM TaskUsers WHERE TaskID = %d", taskID);
+
+        Connection con = MySQLConnection.getConnection();
+        ResultSet rs = null;
+
+        try {
+            con.setAutoCommit(false);
+            rs = con.createStatement().executeQuery(query);
+
+            List<Integer> list = new ArrayList<>();
+            while(rs.next()) {
+                list.add(rs.getInt("UserID"));
+            }
+
+            for(Integer userID : list) {
+                query = String.format("SELECT Login FROM Users WHERE UserID = %d", userID);
+                rs = con.createStatement().executeQuery(query);
+                rs.next();
+                users = users + rs.getString("Login") + " ";
+            }
+
+            con.commit();
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            try {con.rollback();} catch (SQLException se) { se.printStackTrace();}
+        } finally {
+            try { rs.close();  } catch(SQLException se) { se.printStackTrace(); }
+            try { con.close(); } catch(SQLException se) { se.printStackTrace(); }
+        }
+
+        return users;
+    }
+
 }

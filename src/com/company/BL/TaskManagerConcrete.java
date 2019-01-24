@@ -56,4 +56,8 @@ public class TaskManagerConcrete implements TaskManager {
 
         return Collections.unmodifiableList(tasks);
     }
+
+    public String getInvolvedUsers(int taskID) {
+        return taskRepository.getInvolvedUsers(taskID);
+    }
 }

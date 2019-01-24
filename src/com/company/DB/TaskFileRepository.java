@@ -18,6 +18,11 @@ public class TaskFileRepository implements TaskRepository {
     private DateParser dateParser = new DateParser(dateFormat);
     private String fileName;
 
+    @Override
+    public String getInvolvedUsers(int taskID) {
+        return null;
+    }
+
     public TaskFileRepository(String fileName) {
         try {
             this.fileName = fileName;

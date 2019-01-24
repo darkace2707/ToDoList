@@ -1,14 +1,36 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ChoiceBox?>
+<?import javafx.scene.control.DatePicker?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ProgressBar?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.company.UI.MainWindowController">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="508.0" prefWidth="784.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.company.UI.MainWindowController">
    <children>
-      <ProgressBar fx:id="progressBar" layoutX="195.0" layoutY="191.0" prefWidth="200.0" progress="0.0" />
+      <ProgressBar fx:id="progressBar" layoutX="526.0" layoutY="477.0" prefHeight="18.0" prefWidth="188.0" progress="0.0" />
       <Label fx:id="idLabel" layoutX="14.0" layoutY="14.0" visible="false" />
-      <Button layoutX="127.0" layoutY="43.0" mnemonicParsing="false" onAction="#go" text="go" />
+      <TableView fx:id="table" onMouseClicked="#curRow" prefHeight="526.0" prefWidth="525.0">
+        <columns>
+          <TableColumn fx:id="name" prefWidth="138.0" text="Name" />
+          <TableColumn fx:id="date" prefWidth="117.0" text="Deadline Date" />
+            <TableColumn fx:id="status" prefWidth="106.0" text="Status" />
+            <TableColumn fx:id="users" prefWidth="139.0" text="Envolved Users" />
+        </columns>
+      </TableView>
+      <Button fx:id="refreshButton" layoutX="714.0" layoutY="473.0" mnemonicParsing="false" onAction="#refresh" text="Refresh" />
+      <TextField fx:id="newTaskName" layoutX="565.0" layoutY="31.0" promptText="Task Name" />
+      <Button fx:id="createTaskBtn" layoutX="601.0" layoutY="161.0" mnemonicParsing="false" text="Create Task" />
+      <TextField fx:id="changedTaskName" layoutX="565.0" layoutY="242.0" promptText="Task Name" />
+      <Button fx:id="changeTaskBtn" layoutX="599.0" layoutY="409.0" mnemonicParsing="false" onAction="#change" text="Change Task" />
+      <DatePicker fx:id="newTaskDate" layoutX="565.0" layoutY="77.0" prefHeight="25.0" prefWidth="149.0" />
+      <DatePicker fx:id="changedTaskDate" layoutX="566.0" layoutY="282.0" prefHeight="25.0" prefWidth="149.0" />
+      <ChoiceBox fx:id="changedTaskStatus" layoutX="567.0" layoutY="323.0" prefWidth="150.0" />
+      <TextField fx:id="newTaskUsers" layoutX="565.0" layoutY="122.0" promptText="Involved Users" />
+      <TextField fx:id="changedTaskUsers" layoutX="565.0" layoutY="367.0" promptText="Involved Users" />
    </children>
 </AnchorPane>

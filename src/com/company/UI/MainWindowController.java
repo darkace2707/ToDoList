@@ -1,6 +1,10 @@
 package com.company.UI;
+
 import java.net.URL;
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.ResourceBundle;
 
@@ -8,18 +12,14 @@ import com.company.BL.TaskBL;
 import com.company.BL.TaskManager;
 import com.company.BL.TaskManagerConcrete;
 import com.company.DB.TaskMySQLRepository;
-import javafx.application.Platform;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
+import javafx.collections.FXCollections;
+import javafx.collections.ListChangeListener;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.ProgressBar;
-import javafx.scene.control.Slider;
+import javafx.scene.control.*;
+import javafx.scene.control.cell.PropertyValueFactory;
 
 public class MainWindowController {
-
-    private int id;
 
     @FXML
     private ResourceBundle resources;
@@ -28,63 +28,131 @@ public class MainWindowController {
     private URL location;
 
     @FXML
-    private Label idLabel;
-
-    @FXML
-    private Slider slider = new Slider(0, 100, 0);
-
-    @FXML
     private ProgressBar progressBar;
 
     @FXML
+    private ObservableList<TaskUI> list = FXCollections.observableArrayList();
+
+    @FXML
+    private Label idLabel = new Label();
+
+    @FXML
+    private TableView<TaskUI> table = new TableView<>();
+
+    @FXML
+    private TableColumn<TaskUI, String> name = new TableColumn<>();
+
+    @FXML
+    private TableColumn<TaskUI, String> date = new TableColumn<>();
+
+    @FXML
+    private TableColumn<TaskUI, String> status = new TableColumn<>();
+
+    @FXML
+    private TableColumn<TaskUI, String> users = new TableColumn<>();
+
+    @FXML
+    private Button refreshButton;
+
+    @FXML
+    private TextField newTaskName;
+
+    @FXML
+    private TextField newTaskUsers;
+
+    @FXML
+    private Button createTaskBtn;
+
+    @FXML
+    private TextField changedTaskName;
+
+    @FXML
+    private TextField changedTaskUsers;
+
+
+    @FXML
+    private DatePicker newTaskDate = new DatePicker();
+
+    @FXML
+    private DatePicker changedTaskDate;
+
+    @FXML
+    private ChoiceBox<String> changedTaskStatus = new ChoiceBox<>();
+
+    @FXML
     void initialize() {
-        System.out.println(id);
-        System.out.println(idLabel.getText());
-        System.out.println(idLabel.getAccessibleText());
-        //int id = Integer.parseInt(idLabel.getText());
-        /*System.out.println("FIRST");
-        TaskManager tdl = new TaskManagerConcrete(new TaskMySQLRepository(id));
-        List<TaskBL> list = new ArrayList<>(tdl.getTasks());
+        name.setCellValueFactory(new PropertyValueFactory<>("name"));
+        date.setCellValueFactory(new PropertyValueFactory<>("deadlineDate"));
+        status.setCellValueFactory(new PropertyValueFactory<>("status"));
+        users.setCellValueFactory(new PropertyValueFactory<>("users"));
+        table.setItems(list);
 
-        progressBar.setProgress(0.5f);
 
-        System.out.println("SECOND");
-        double i=0;
-        for (TaskBL task : list) {
-            System.out.println(task);
-            progressBar.setProgress(0.5f+i/list.size());
-            i++;
-        }
-        System.out.println("THIRD");*/
+        ObservableList<String> statuses = FXCollections.observableArrayList("Planned", "In progress", "Ended");
+        changedTaskStatus.setItems(statuses);
+
     }
 
     @FXML
-    void go() {
-        int id = Integer.parseInt(idLabel.getText());
-        System.out.println("FIRST");
-        TaskManager tdl = new TaskManagerConcrete(new TaskMySQLRepository(id));
-        List<TaskBL> list = new ArrayList<>(tdl.getTasks());
+    void curRow() {
 
-        progressBar.setProgress(0.5f);
+        changedTaskName.setText(table.getSelectionModel().getSelectedItem().getName());
 
-        System.out.println("SECOND");
-        double i=0;
-        for (TaskBL task : list) {
-            System.out.println(task);
-            progressBar.setProgress(0.5f+i/list.size());
-            try {
-                Thread.sleep(500);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-            i++;
+        List<Integer> date = new ArrayList<>(Mapper.map(table.getSelectionModel().getSelectedItem().getDeadlineDate()));
+        changedTaskDate.setValue(LocalDate.of(date.get(0), date.get(1), date.get(2)));
+
+        changedTaskStatus.setValue(table.getSelectionModel().getSelectedItem().getStatus().getStatus());
+
+        changedTaskUsers.setText(table.getSelectionModel().getSelectedItem().getUsers());
+    }
+
+    @FXML
+    void change() {
+        TaskUI task = table.getSelectionModel().getSelectedItem();
+
+        String name = changedTaskName.getText();
+
+        Date date = Date.from(changedTaskDate.getValue().atStartOfDay(ZoneId.systemDefault()).toInstant());
+
+        Status status;
+        switch (changedTaskStatus.getValue()) {
+            case "Planned":
+                status = Status.PLANNED;
+                break;
+            case "In progress":
+                status = Status.INPROGRESS;
+                break;
+            case "Ended":
+                status = Status.ENDED;
+                break;
+
+                default:
+                    status = null;
+                    break;
         }
-        System.out.println("THIRD");
+
+        TaskUI changedTask = new TaskUI(task.getId(), name, date, status, task.getMasterID());
+
+        TaskManager tdl = new TaskManagerConcrete(new TaskMySQLRepository(task.getMasterID()));
+        tdl.update(Mapper.map(task), Mapper.map(changedTask));
+
+        refresh();
+    }
+
+    @FXML
+    void refresh() {
+        //table.getItems().clear();
+        initData(list.get(0).getMasterID());
+        initialize();
     }
 
     void initData(int id) {
-        this.id = id;
-        idLabel.setText(Integer.toString(id));
-        System.out.println(id);
+        TaskManager tdl = new TaskManagerConcrete(new TaskMySQLRepository(id));
+        list.clear();
+        for (TaskBL task : tdl.getTasks() ) {
+            list.add(Mapper.map(task));
+        }
+
+
     }
 }

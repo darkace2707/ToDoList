@@ -14,6 +14,7 @@ public interface TaskRepository {
 
     void add(TaskDB task);
 
+    String getInvolvedUsers(int taskID);
 }
 
 //public interface Repository<T>{

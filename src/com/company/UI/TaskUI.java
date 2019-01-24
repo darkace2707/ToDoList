@@ -1,5 +1,9 @@
 package com.company.UI;
 
+import com.company.BL.TaskManager;
+import com.company.BL.TaskManagerConcrete;
+import com.company.DB.TaskMySQLRepository;
+
 import java.util.*;
 
 public class TaskUI {
@@ -12,6 +16,8 @@ public class TaskUI {
 
     private Date deadlineDate = new Date();
 
+    private String users;
+
     private int masterID;
 
     public TaskUI(int id, String name, Date deadlineDate, Status status, int masterID) {
@@ -20,6 +26,8 @@ public class TaskUI {
         this.deadlineDate = deadlineDate;
         this.status = status;
         this.masterID = masterID;
+        TaskManager tdl = new TaskManagerConcrete(new TaskMySQLRepository(masterID));
+        this.users = tdl.getInvolvedUsers(id);
     }
 
     public int getMasterID() {
@@ -40,6 +48,10 @@ public class TaskUI {
 
     public int getId() {
         return id;
+    }
+
+    public String getUsers() {
+        return users;
     }
 
     @Override

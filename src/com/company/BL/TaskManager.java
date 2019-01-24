@@ -17,4 +17,6 @@ public interface TaskManager {
     List<TaskBL> getInIterval(Date startDate, Date endDate);
 
     List<TaskBL> getTasks();
+
+    String getInvolvedUsers(int taskID);
 }
