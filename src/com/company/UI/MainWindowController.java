@@ -130,9 +130,11 @@ public class MainWindowController implements ProgressListener {
 
         tdl.add(Mapper.map(task));
 
-        List<String> users = Arrays.asList(newTaskUsers.getText().split(" "));
-        users.forEach(System.out::println);
-        tdl.updateInvolvedUsers(task.getId(), users);
+        if (!newTaskUsers.getText().equals("")) {
+            List<String> users = Arrays.asList(newTaskUsers.getText().split(" "));
+            users.forEach(System.out::println);
+            tdl.updateInvolvedUsers(task.getId(), users);
+        }
 
         refresh();
     }
