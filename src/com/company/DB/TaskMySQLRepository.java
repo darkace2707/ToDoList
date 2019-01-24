@@ -1,13 +1,14 @@
 package com.company.DB;
 
 import com.company.UI.DateParser;
+import com.company.obs.ProgressObservable;
 
 import java.sql.*;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class TaskMySQLRepository implements TaskRepository {
+public class TaskMySQLRepository extends ProgressObservable implements TaskRepository {
 
     private String dateFormat = "y-M-d H:m:s";
 
@@ -176,4 +177,53 @@ public class TaskMySQLRepository implements TaskRepository {
         return users;
     }
 
+    @Override
+    public void updateInvolvedUsers(int taskID, List<String> users) {
+        String query = String.format("DELETE TaskUsers FROM TaskUsers WHERE TaskID = %d", taskID);
+
+        Connection con = MySQLConnection.getConnection();
+        ResultSet rs = null;
+
+        try {
+            con.setAutoCommit(false);
+
+            MySQLConnection.updateRepository(query);
+
+            query = String.format("INSERT INTO TaskUsers (TaskID, UserID) VALUES (%d ,%d)", taskID, userID);
+            con.createStatement().executeUpdate(query);
+
+            List<Integer> usersID = new ArrayList<>();
+            for( String user : users) {
+                query = String.format("SELECT UserID FROM Users WHERE Login = \"%s\"", user);
+
+                rs = con.createStatement().executeQuery(query);
+
+                while(rs.next()){
+                        if (userID != rs.getInt("UserID")) {
+                            usersID.add(rs.getInt("UserID"));
+                        }
+                }
+            }
+
+            for( Integer user : usersID) {
+                query = String.format("INSERT INTO TaskUsers (TaskID, UserID) VALUES (%d ,%d)", taskID, user);
+
+                con.createStatement().executeUpdate(query);
+
+                con.commit();
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            try {con.rollback();} catch (SQLException se) { se.printStackTrace();}
+        } finally {
+            try { rs.close();  } catch(SQLException se) { se.printStackTrace(); }
+            try { con.close(); } catch(SQLException se) { se.printStackTrace(); }
+        }
+
+    }
+
+    public int getUserID() {
+        return userID;
+    }
 }

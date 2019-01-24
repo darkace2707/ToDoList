@@ -3,23 +3,31 @@ package com.company.UI;
 import java.net.URL;
 import java.time.LocalDate;
 import java.time.ZoneId;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.ResourceBundle;
+import java.util.*;
+import java.util.stream.Collectors;
 
 import com.company.BL.TaskBL;
 import com.company.BL.TaskManager;
 import com.company.BL.TaskManagerConcrete;
 import com.company.DB.TaskMySQLRepository;
+import com.company.obs.ProgressListener;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
+import javafx.concurrent.Task;
+import javafx.concurrent.WorkerStateEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 
-public class MainWindowController {
+public class MainWindowController implements ProgressListener {
+
+    @FXML
+    private Integer id = 0;
+
+    @FXML
+    private TaskManagerConcrete tdl = null;
 
     @FXML
     private ResourceBundle resources;
@@ -31,7 +39,7 @@ public class MainWindowController {
     private ProgressBar progressBar;
 
     @FXML
-    private ObservableList<TaskUI> list = FXCollections.observableArrayList();
+    private List<TaskUI> list = new ArrayList<>();
 
     @FXML
     private Label idLabel = new Label();
@@ -85,7 +93,6 @@ public class MainWindowController {
         date.setCellValueFactory(new PropertyValueFactory<>("deadlineDate"));
         status.setCellValueFactory(new PropertyValueFactory<>("status"));
         users.setCellValueFactory(new PropertyValueFactory<>("users"));
-        table.setItems(list);
 
 
         ObservableList<String> statuses = FXCollections.observableArrayList("Planned", "In progress", "Ended");
@@ -93,8 +100,15 @@ public class MainWindowController {
 
     }
 
+    void initTable(){
+        table.getItems().clear();
+        table.getItems().addAll(list);
+    }
+
     @FXML
     void curRow() {
+
+        this.id = table.getSelectionModel().getSelectedItem().getMasterID();
 
         changedTaskName.setText(table.getSelectionModel().getSelectedItem().getName());
 
@@ -104,6 +118,23 @@ public class MainWindowController {
         changedTaskStatus.setValue(table.getSelectionModel().getSelectedItem().getStatus().getStatus());
 
         changedTaskUsers.setText(table.getSelectionModel().getSelectedItem().getUsers());
+    }
+
+    @FXML
+    void create() {
+        String name = newTaskName.getText();
+
+        Date date = Date.from(newTaskDate.getValue().atStartOfDay(ZoneId.systemDefault()).toInstant());
+
+        TaskUI task = new TaskUI(0, name, date, Status.PLANNED, tdl.getUserID());
+
+        tdl.add(Mapper.map(task));
+
+        List<String> users = Arrays.asList(newTaskUsers.getText().split(" "));
+        users.forEach(System.out::println);
+        tdl.updateInvolvedUsers(task.getId(), users);
+
+        refresh();
     }
 
     @FXML
@@ -136,23 +167,60 @@ public class MainWindowController {
         TaskManager tdl = new TaskManagerConcrete(new TaskMySQLRepository(task.getMasterID()));
         tdl.update(Mapper.map(task), Mapper.map(changedTask));
 
+        List<String> users = Arrays.asList(changedTaskUsers.getText().split(" "));
+        users.forEach(System.out::println);
+        tdl.updateInvolvedUsers(task.getId(), users);
+
         refresh();
     }
 
     @FXML
     void refresh() {
-        //table.getItems().clear();
-        initData(list.get(0).getMasterID());
-        initialize();
+        //initData(list.get(0).getMasterID());
+        this.loadTasks();
+    }
+
+    private void loadTasks() {
+        final ProgressListener listener = this;
+        Task task = new Task<List<TaskUI>>() {
+            @Override
+            public List<TaskUI> call() {
+                tdl.subscribe(listener);
+                list.clear();
+                for (TaskBL task : tdl.getTasks() ) {
+                    list.add(Mapper.map(task));
+                }
+                return list;
+            }
+        };
+
+        task.addEventHandler(WorkerStateEvent.WORKER_STATE_SUCCEEDED, (EventHandler<WorkerStateEvent>) t -> {
+            this.table.setPlaceholder(new Label("No available tasks"));
+            this.list = ((Task<List<TaskUI>>) task).getValue();
+            this.table.setDisable(false);
+            this.initTable();
+        });
+
+        task.addEventHandler(WorkerStateEvent.WORKER_STATE_RUNNING, (EventHandler<WorkerStateEvent>) t -> {
+            this.table.setPlaceholder(new Label("Data is loading..."));
+            this.table.setDisable(true);
+            this.progressBar.setProgress(0);
+        });
+
+        new Thread(task).start();
     }
 
     void initData(int id) {
-        TaskManager tdl = new TaskManagerConcrete(new TaskMySQLRepository(id));
-        list.clear();
+        tdl = new TaskManagerConcrete(new TaskMySQLRepository(id));
+        this.loadTasks();
+        /*list.clear();
         for (TaskBL task : tdl.getTasks() ) {
             list.add(Mapper.map(task));
-        }
+        }*/
+    }
 
-
+    @Override
+    public void update(int progress) {
+        progressBar.setProgress(((double) progress) / 100);
     }
 }

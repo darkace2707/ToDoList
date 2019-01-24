@@ -8,9 +8,9 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="238.0" prefWidth="225.0" style="-fx-background-color: #FFFFFF;" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.company.UI.Controller">
+<AnchorPane prefHeight="238.0" prefWidth="225.0" style="-fx-background-color: #FFFFFF;" xmlns="http://javafx.com/javafx/8.0.172-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.company.UI.Controller">
    <children>
-      <TextField fx:id="loginField" layoutX="25.0" layoutY="53.0" prefHeight="28.0" prefWidth="173.0" style="-fx-background-color: #F3A568; -fx-border-color: #A24E11; -fx-border-radius: 3;">
+      <TextField fx:id="loginField" layoutX="25.0" layoutY="53.0" prefHeight="28.0" prefWidth="173.0" style="-fx-background-color: #F3A568; -fx-border-color: #A24E11; -fx-border-radius: 3;" text="da_nya">
          <font>
             <Font name="Ubuntu" size="13.0" />
          </font></TextField>
@@ -29,7 +29,7 @@
             <Font name="Comfortaa" size="19.0" />
          </font>
       </Label>
-      <PasswordField fx:id="passwordField" layoutX="25.0" layoutY="115.0" prefHeight="27.0" prefWidth="173.0" style="-fx-background-color: #F3A568; -fx-border-color: #A24E11; -fx-border-radius: 3;">
+      <PasswordField fx:id="passwordField" layoutX="25.0" layoutY="115.0" prefHeight="27.0" prefWidth="173.0" style="-fx-background-color: #F3A568; -fx-border-color: #A24E11; -fx-border-radius: 3;" text="123">
          <font>
             <Font name="Ubuntu" size="13.0" />
          </font></PasswordField>

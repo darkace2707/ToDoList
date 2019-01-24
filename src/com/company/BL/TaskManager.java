@@ -19,4 +19,8 @@ public interface TaskManager {
     List<TaskBL> getTasks();
 
     String getInvolvedUsers(int taskID);
+
+    void updateInvolvedUsers(int taskID, List<String> users);
+
+    int getUserID();
 }

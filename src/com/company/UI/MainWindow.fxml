@@ -10,7 +10,7 @@
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="508.0" prefWidth="784.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.company.UI.MainWindowController">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="508.0" prefWidth="784.0" xmlns="http://javafx.com/javafx/8.0.172-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.company.UI.MainWindowController">
    <children>
       <ProgressBar fx:id="progressBar" layoutX="526.0" layoutY="477.0" prefHeight="18.0" prefWidth="188.0" progress="0.0" />
       <Label fx:id="idLabel" layoutX="14.0" layoutY="14.0" visible="false" />
@@ -24,7 +24,7 @@
       </TableView>
       <Button fx:id="refreshButton" layoutX="714.0" layoutY="473.0" mnemonicParsing="false" onAction="#refresh" text="Refresh" />
       <TextField fx:id="newTaskName" layoutX="565.0" layoutY="31.0" promptText="Task Name" />
-      <Button fx:id="createTaskBtn" layoutX="601.0" layoutY="161.0" mnemonicParsing="false" text="Create Task" />
+      <Button fx:id="createTaskBtn" layoutX="601.0" layoutY="161.0" mnemonicParsing="false" onAction="#create" text="Create Task" />
       <TextField fx:id="changedTaskName" layoutX="565.0" layoutY="242.0" promptText="Task Name" />
       <Button fx:id="changeTaskBtn" layoutX="599.0" layoutY="409.0" mnemonicParsing="false" onAction="#change" text="Change Task" />
       <DatePicker fx:id="newTaskDate" layoutX="565.0" layoutY="77.0" prefHeight="25.0" prefWidth="149.0" />

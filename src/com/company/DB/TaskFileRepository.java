@@ -147,4 +147,13 @@ public class TaskFileRepository implements TaskRepository {
 
     }
 
+    @Override
+    public void updateInvolvedUsers(int taskID, List<String> users) {
+
+    }
+
+    @Override
+    public int getUserID() {
+        return 0;
+    }
 }
